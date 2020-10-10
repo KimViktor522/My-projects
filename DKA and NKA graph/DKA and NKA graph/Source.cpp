@@ -1,3 +1,4 @@
+//не работает дописывать не буду та еще х****
 #include <iostream>
 #include <cstdio>
 #include <string>
@@ -5,58 +6,81 @@
 using namespace std;
 
 //проверка на подходящее символы
-bool check_char(char str, int num) {
-	if (num == 3) {
-		if (str != '(' && str != ')')
-			if (str != '*' && str != 'v' && str != 'V')
-				if (str != 'a' && str != 'b')
-					return false;
-	}
-	else
-		return true;
-	if (num == 2) {
-		if (str != '(' && str != ')')
-			return false;
-	}
-	else
-		return true;
-	if (num == 1) {
+bool check_char(char str) {
+	if (str != '(' && str != ')')
 		if (str != '*' && str != 'v' && str != 'V')
-			return false;
-	}
-	else
-		return true;
-	if (num == 0) {
-		if (str != ')')
-			return false;
-	}
-	else
-		return true;
-	if (num == 9) {
-		if (str != '(')
-			return false;
-	}
-	else
-		return true;
+			if (str != 'a' && str != 'b' && str != 'b')
+				return false;
+	
+	return true;
 }
 
+//проверка на скобки
+bool check_bracks_char(char str) {
+	if (str != '(' && str != ')')
+		return false;
+	return true;
+}
+
+//проверка на "или" или "звездочка клини"
+bool check_action_char(char str) {
+	if (str != '*' && str != 'v' && str != 'V')
+		return false;
+	return true;
+}
+
+//добвать рацион. языка (сейчас только упрощение скобок)
 //рационализация языка
 string rationalization_language(string languageStr) {
-	int num_brac{};
+	int num_brack{};
+	bool even_brack_open{ false }, even_brack_close{ false }, union_in_brack {false};
 	if (languageStr[0] == 'v' || languageStr[0] == 'V')
 		return "0";
-	for (int i{}; i < languageStr.length(); ++i) {//проверка корректного ввода 
-		if (!check_char(languageStr[i], 3))
+	for (int i{}; i < languageStr.length(); ++i) {																	//проверка корректного ввода 
+		if (!check_char(languageStr[i]))
 			return "0";
-		if (i > 0 && (check_char(languageStr[i - 1], 1) == check_char(languageStr[i], 1))) {
-			cout << "Not corret: * or v";
+		if (languageStr[i] == '(') {
+			++num_brack;
+			if (even_brack_open) even_brack_open = false;
+			else even_brack_open = true;
+		}
+		if (i + 1 < languageStr.length() && languageStr[i + 1] == ')') {
+			--num_brack;
+			if (even_brack_open) even_brack_open = false;
+			else even_brack_open = true;
+			if (languageStr[num_brack] == '(' && languageStr[languageStr.length() - 1] == ')') {					//сокращение скобок в начале и в конце "(*)"
+				languageStr.erase(num_brack, 1);
+				languageStr.erase(languageStr.length() - 1, 2);
+				--i;
+				--num_brack;
+			}
+			if (i + 2 < languageStr.length() && languageStr[i + 2] != '*') {//полсле скобки ")" не идет "*" 		//сокращение лишних скобок
+				if (!union_in_brack) {//внутри скобок нет "v" или "V"									
+					languageStr.erase(i+1, 1);
+					for (int k{i}; k >= 0; --k) {
+						if (languageStr[k] == '(') {
+							languageStr.erase(k, 1);
+							break;
+						}
+					}
+					--i;
+				}
+			}
+			union_in_brack = false;
+		}
+		if (languageStr[i] == 'v' || languageStr[i] == 'V') {//внутри скобок "v" или "V"
+			union_in_brack = true;
+		}
+		if (i > 0 && (check_action_char(languageStr[i - 1]) == true && check_action_char(languageStr[i]) == true)) {//подряд "**" или "vv"
+			cout << "Not corret: * or v" << endl;
 			return "0";
 		}
-		if (check_char(languageStr[i - 1], 9)) ++num_brac;
-		if (check_char(languageStr[i - 1], 0)) --num_brac;
+		if ((languageStr.length() < i + 2) && languageStr[i + 1] == '(' && languageStr[i + 2] == ')') {				//пустые скобки "()"
+			languageStr.erase(i + 1, 2);
+		}
 	}
-	if (num_brac != 0) {
-		cout << "Not corret: '(' or ')'";
+	if (num_brack != 0) {
+		cout << "Not corret: '(' or ')'" << endl;
 		return "0";
 	}
 	cout << "Рационализированный язык: " << languageStr << endl;
@@ -162,11 +186,11 @@ public:
 int main() {
 	system("chcp 65001"); system("cls");
 	string languageStr;
-	cout << "Введите язык: ";
+	cout << "Доступные символы: e a b ( ) v V *" << endl << "Введите язык: ";
 	cin >> languageStr;
 	languageStr = rationalization_language(languageStr);
 	if (languageStr == "0") {
-		cout << "NOT CORRECT INPUT!!!";
+		cout << "NOT CORRECT INPUT!!!" << endl;
 	}
 
 

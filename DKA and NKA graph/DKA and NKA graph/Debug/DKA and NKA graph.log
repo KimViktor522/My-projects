@@ -1,3 +1,6 @@
 ﻿  Source.cpp
-D:\programming\My-projects\DKA and NKA graph\DKA and NKA graph\Source.cpp(16,18): warning C4018: <: несоответствие типов со знаком и без знака
+D:\programming\My-projects\DKA and NKA graph\DKA and NKA graph\Source.cpp(37,18): warning C4018: <: несоответствие типов со знаком и без знака
+D:\programming\My-projects\DKA and NKA graph\DKA and NKA graph\Source.cpp(45,13): warning C4018: <: несоответствие типов со знаком и без знака
+D:\programming\My-projects\DKA and NKA graph\DKA and NKA graph\Source.cpp(55,14): warning C4018: <: несоответствие типов со знаком и без знака
+D:\programming\My-projects\DKA and NKA graph\DKA and NKA graph\Source.cpp(76,29): warning C4018: <: несоответствие типов со знаком и без знака
   DKA and NKA graph.vcxproj -> D:\programming\My-projects\DKA and NKA graph\Debug\DKA and NKA graph.exe
